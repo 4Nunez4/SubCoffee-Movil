@@ -2,7 +2,7 @@ import ApiManager from "./Apimanager";
 
 export const user_login = async data => {
     try{    
-    const result = await ApiManager("/auth//login",{
+    const result = await ApiManager("/auth/login",{
         method:"POST",
         headers:{
             'Content-Type':"application/json"
@@ -15,3 +15,8 @@ export const user_login = async data => {
         return error.response.data
     }
 }
+
+
+
+
+

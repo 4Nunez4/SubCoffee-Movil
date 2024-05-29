@@ -8,7 +8,7 @@ const Input = ({ searchTerm, setSearchTerm }) => {
   const handleFocus = () => {
     setIsFocused(true);
     Animated.timing(widthAnim, {
-      toValue: 300,  
+      toValue: 290,  
       duration: 300,
       useNativeDriver: false,
     }).start();
@@ -18,7 +18,7 @@ const Input = ({ searchTerm, setSearchTerm }) => {
     if (searchTerm === '') {
       setIsFocused(false);
       Animated.timing(widthAnim, {
-        toValue: 200,  
+        toValue: 210,  
         duration: 300,
         useNativeDriver: false,
       }).start();
@@ -50,7 +50,7 @@ const Input = ({ searchTerm, setSearchTerm }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     paddingVertical: 10,
     marginBottom: 10,
   },

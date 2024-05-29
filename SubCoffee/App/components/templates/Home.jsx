@@ -1,66 +1,87 @@
-// Home.js
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, View } from "react-native";
+import { ActivityIndicator, FlatList, View, Text, StyleSheet } from "react-native";
 import axios from "axios";
 import SearchBar from "../atoms/search/setSearchTerm";
-import DataContainer from "../atoms/containers/container";
-
 
 function Home({ navigation }) {
   const [isLoading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
+  const [movies, setMovies] = useState([]);
+  const [filteredMovies, setFilteredMovies] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const listar = (id) => {
-    navigation.navigate('Subas', { id });
-    console.log('Holaaaa', id);
-  };
+  const URL = 'https://reactnative.dev/movies.json';
 
-  const URL = 'http://10.0.2.2:4000/subasta/listar';
-
-  const getSubastaFetch = async () => {
+  const fetchMovies = async () => {
     try {
       const response = await axios.get(URL);
-      setData(response.data);
+      setMovies(response.data.movies);
+      setFilteredMovies(response.data.movies); // Inicialmente, muestra todas las películas
+      console.log(response.data.movies); 
     } catch (error) {
-      console.error('Error de Axios:', error);
+      console.error('Error fetching data:', error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    getSubastaFetch();
+    fetchMovies();
   }, []);
 
-  const filteredData = data.filter(item =>
-    item.descripcion_sub.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Función para filtrar las películas basadas en el término de búsqueda
+  const handleSearch = (text) => {
+    setSearchTerm(text);
+    const filtered = movies.filter(movie =>
+      movie.title.toLowerCase().includes(text.toLowerCase())
+    );
+    setFilteredMovies(filtered);
+  };
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#fff' }}>
-      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-
+    <View style={styles.container}>
+      <SearchBar searchTerm={searchTerm} setSearchTerm={handleSearch} />
       {isLoading ? (
         <ActivityIndicator />
       ) : (
         <FlatList
-          data={filteredData}
-          keyExtractor={(item) => item.pk_id_suba.toString()}
+          data={filteredMovies}
+          keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <DataContainer
-              imageUri={item.imagen_sub}
-              startDate={item.fecha_inicio_sub}
-              endDate={item.fecha_fin_sub}
-              description={item.descripcion_sub}
-              variety={item.fk_variedad}
-              onPress={() => listar(item.pk_id_suba)}
-            />
+            <View style={styles.itemContainer}>
+              <Text style={styles.title}>Title: {item.title}</Text>
+              <Text style={styles.releaseYear}>Release Year: {item.releaseYear}</Text>
+            </View>
           )}
         />
       )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingHorizontal: 20,
+    paddingTop: 22,
+  },
+  itemContainer: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 14,
+    color: '#666',
+  },
+  releaseYear: {
+    fontSize: 14,
+    color: '#666',
+  },
+});
 
 export default Home;

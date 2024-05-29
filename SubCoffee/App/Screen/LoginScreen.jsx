@@ -1,24 +1,31 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert , Modal, Animated, TouchableWithoutFeedback} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import LinkBoton from '../components/atoms/button/linkboton';
 import { IP } from './IP';
 import NetInfo from '@react-native-community/netinfo'
-
+import CustomModal from '../components/modal/modal';
 
 
  const ip = "10.0.2.3";
 
-// const ip =IP
 
-const LoginScreen = () => {
+const LoginScreen = ({ visible, onClose }) => {
   const navigation = useNavigation();
   
-  const [formData, setFormData] = useState({
+  const initialFormState = {
     correo: '',
     password: '',
-  });
+  };
+
+  const [formData, setFormData] = useState(initialFormState);
+
+  useEffect(() => {
+    if (!visible) {
+      setFormData(initialFormState);
+    }
+  }, [visible]);
+
   useEffect(()=>{
     const unsubscribe = NetInfo.addEventListener(state =>{
       console.log('Tipo de conexion', state.type);
@@ -38,27 +45,17 @@ const LoginScreen = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const Validacion = async () => {
-    // Verificar el correo electrónico y la contraseña ingresados
+  const Validacion = () => {
     const { correo, password } = formData;
-    
-    // Verificar las credenciales para el usuario "andres@gmail.com"
+
     if (correo === "andres@gmail.com" && password === "123456789") {
-      // Navegar a la vista de "Comprador" si el usuario es "andres@gmail.com"
-      navigation.navigate("Comprador");
-      return;
+      navigation.navigate("Main", { userType: "comprador" });
+    } else if (correo === "valentina@gmail.com" && password === "123456789") {
+      navigation.navigate("Main", { userType: "vendedor" });
+    } else {
+      Alert.alert('Credenciales incorrectas', 'Por favor, verifica tus credenciales');
     }
-    
-    // Verificar las credenciales para el usuario "valen@gmail.com"
-    if (correo === "valen@gmail.com" && password === "123456789") {
-      // Navegar a la vista de "Vendedor" si el usuario es "valen@gmail.com"
-      navigation.navigate("Vendedor");
-      return;
-    }
-  
-    // Mostrar un mensaje de error si las credenciales no son válidas
-    Alert.alert('Credenciales incorrectas', 'Por favor, verifica tus credenciales');
-  }
+  };
   
 
   // const Validacion = async () =>{
@@ -120,34 +117,30 @@ const LoginScreen = () => {
   // }
 
   return (
-    <>
-      <View style={styles.container}>
-       
-        <View style={styles.formulario}>
-          <Text style={styles.titulo}>INICIAR SESION </Text>
-          <Text style={styles.etiqueta}>Correo electronico:</Text>
-          <TextInput style={styles.input} placeholderTextColor="#999"  value={formData.correo} onChangeText={(text) => handleInputChange('correo', text)} placeholder='Correo electronico'/>
-          <Text style={styles.etiqueta}>Contraseña:</Text>
-          <TextInput style={styles.input}  placeholderTextColor="#999"  value={formData.password} onChangeText={(text) => handleInputChange('password', text)} placeholder='Contraseña' secureTextEntry={true}/>
-
-          <TouchableOpacity style={styles.boton} onPress={Validacion}>
-            <Text style={styles.textoBoton}>Iniciar Sesion</Text>
-          </TouchableOpacity>
-        </View>
+    <CustomModal visible={visible} onClose={onClose}>
+          <View style={styles.formulario}>
+            <Text style={styles.titulo}>INICIAR SESION</Text>
+            <Text style={styles.etiqueta}>Correo electronico:</Text>
+            <TextInput style={styles.input} placeholderTextColor="#999" value={formData.correo} onChangeText={(text) => handleInputChange('correo', text)} placeholder='Correo electronico' />
+            <Text style={styles.etiqueta}>Contraseña:</Text>
+            <TextInput style={styles.input} placeholderTextColor="#999" value={formData.password} onChangeText={(text) => handleInputChange('password', text)} placeholder='Contraseña' secureTextEntry={true} />
+           
+            <LinkBoton press={Validacion} text="Iniciar Sesión" styles={styles.boton} />
+          {/* <Text style={styles.textoBoton}>Iniciar Sesion</Text> */}
       </View>
-    </>
-  )
-}
+    </CustomModal>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:'#fff',
-    paddingHorizontal: 20,
+    backgroundColor:'rgba(0,0,0,0.0)',
     paddingTop:'5%',
   },
+ 
   titulo: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -180,22 +173,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingHorizontal: 10,
     color:'#000'
-  },
-  boton: {
-    backgroundColor: '#39A800',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    marginTop:10,
-    marginStart:60,
-    height:40,
-    width:180,
-  },
-  textoBoton: {
-    color: '#fff',
-    fontSize: 16,
-    textAlign:'center',
-    fontWeight: 'bold',
   },
 
 });

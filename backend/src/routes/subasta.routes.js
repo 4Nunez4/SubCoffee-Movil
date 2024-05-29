@@ -10,6 +10,7 @@ import {
   actualizar,
   buscar,
   eliminar,
+  buscarSubastaForUser,
 } from "../controllers/subasta.controllers.js";
 import {
   validarActualizarSubasta,
@@ -19,13 +20,14 @@ import { verificarUserToken } from "../controllers/autenticacionController.js";
 
 const router = Router();
 
-router.post("/registrar",subastaFiles,verificarUserToken,validarRegistrarSubasta,registrar);
-router.get("/listar", listar);
-router.put("/actualizar/:id",subastaFiles,verificarUserToken,validarActualizarSubasta,actualizar);
-router.get("/buscar/:id", verificarUserToken, buscar);
+router.post("/subasta", /* subastaFiles,verificarUserToken, */ registrar);
+router.get("/subasta", /* verificarUserToken, */ listar);
+router.put("/subasta/:id",subastaFiles,verificarUserToken, validarActualizarSubasta,actualizar);
+router.get("/buscar/:id", verificarUserToken, buscar); 
+router.get("/buscarsubforuser/:id", verificarUserToken, buscarSubastaForUser); 
 router.delete("/eliminar/:id", verificarUserToken, eliminar);
-router.put("/abierta/:id", verificarUserToken, SubastaAbierta);
-router.put("/cerrada/:id", verificarUserToken, SubastaCerrada);
+router.put("/subastaac/:id", verificarUserToken, SubastaAbierta);
+router.put("/subastades/:id", verificarUserToken, SubastaCerrada);
 router.put("/espera/:id", verificarUserToken, SubastaEspera);
 router.put("/proceso/:id", verificarUserToken, SubastaProceso);
 

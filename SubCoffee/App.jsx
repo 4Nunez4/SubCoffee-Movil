@@ -8,7 +8,8 @@ import { useEffect, useState } from "react";
 import FirstPage from "./App/Screen/FirstPage/firstPage.jsx";
 import TabNavigationCom from "./App/navigation/TabsNavigationCom.jsx";
 import TabNavigationVen from "./App/navigation/TabsNavigationVen.jsx";
-import Drawer from "./App/navigation/sidebar.jsx";
+import SideBar from "./App/navigation/sidebar.jsx";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -61,7 +62,18 @@ const App = () => {
                   headerShown: false,
                   headerBackTitleVisible: false,
                 }}
+                
               />
+             <Stack.Screen
+              name="Main"
+              options={{
+                headerShown: false,
+                headerBackTitleVisible: false,
+              }}
+            >
+              {({ route }) => <SideBar userType={route.params.userType} />}
+            </Stack.Screen>
+              
             </>
           )}
         </Stack.Navigator>
