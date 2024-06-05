@@ -10,7 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 // const ip = "192.168.11.238";
-const ip = "10.193.157.247";
+const ip = "10.193.156.73";
 
 const LoginScreen = ({ visible, onClose }) => {
   const navigation = useNavigation();
