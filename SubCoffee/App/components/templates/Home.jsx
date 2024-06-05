@@ -3,13 +3,18 @@ import { ActivityIndicator, FlatList, View, Text, StyleSheet } from "react-nativ
 import axios from "axios";
 import SearchBar from "../atoms/search/setSearchTerm";
 
+const ip = "192.168.11.238"; 
+
 function Home({ navigation }) {
   const [isLoading, setLoading] = useState(true);
   const [movies, setMovies] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const URL = 'https://reactnative.dev/movies.json';
+  
+   const URL = 'https://reactnative.dev/movies.json';
+  // const URL = 'http://10.0.2.2:4000/v1/users';
+
 
   const fetchMovies = async () => {
     try {
@@ -39,6 +44,7 @@ function Home({ navigation }) {
 
   return (
     <View style={styles.container}>
+      
       <SearchBar searchTerm={searchTerm} setSearchTerm={handleSearch} />
       {isLoading ? (
         <ActivityIndicator />

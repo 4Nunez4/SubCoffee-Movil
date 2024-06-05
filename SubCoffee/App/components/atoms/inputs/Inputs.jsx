@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     input: {
         marginTop: 10,
         height: 40,
-        width:250,
+        width:270,
         borderColor: 'gray',
         borderWidth: 1,
         color:'black',

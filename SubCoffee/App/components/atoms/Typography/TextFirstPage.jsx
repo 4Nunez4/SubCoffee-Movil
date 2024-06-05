@@ -5,7 +5,7 @@ import { darkTheme } from "../../../styles/themes/themes";
 import iconSubCoffe from "../../../resources/IconoSubCoffee.png"
 
 const TitleFirst = ({ theme }) => {
-    const subColor = 'white';
+    const subColor = 'black';
     const coffeColor = theme === 'darkTheme' ? darkTheme.text : '#39A800';
     // const coffeColor = theme === 'darkTheme' ? darkTheme.text : '#39A800';
 

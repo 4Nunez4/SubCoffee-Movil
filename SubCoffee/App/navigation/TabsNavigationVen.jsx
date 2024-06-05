@@ -6,16 +6,8 @@ import Home from "../components/templates/Home";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import CustomHeader from "./header";
 
 const Tab = createBottomTabNavigator();
-
-const ScreenWithHeader = ({ component: Component, ...props }) => (
-  <React.Fragment>
-    <CustomHeader userName="userName" navigation={props.navigation} />
-    <Component {...props} />
-  </React.Fragment>
-);
 
 const TabNavigationVen = () => {
   return (
@@ -27,7 +19,7 @@ const TabNavigationVen = () => {
       }}
     >
       <Tab.Screen
-        name={`Bienvenido userName`}
+        name={`Bienvenido Kata`}
         component={Home}
         options={{
           tabBarIcon: ({ color, size }) => (
@@ -39,6 +31,7 @@ const TabNavigationVen = () => {
         name="Subastar"
         component={SubastaScreen}
         options={{
+          
           tabBarIcon: ({ color, size }) => (
             <FontAwesome name="plus" size={36} color={color} />
           ),

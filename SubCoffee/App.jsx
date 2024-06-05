@@ -13,6 +13,7 @@ import SideBar from "./App/navigation/sidebar.jsx";
 
 const Stack = createNativeStackNavigator();
 
+
 const App = () => {
   const [isShowSplash, setIsShowSplash] = useState(true);
 
