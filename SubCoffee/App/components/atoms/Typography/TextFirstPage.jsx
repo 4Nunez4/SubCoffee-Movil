@@ -6,6 +6,7 @@ import iconSubCoffe from "../../../resources/IconoSubCoffee.png"
 
 const TitleFirst = ({ theme }) => {
     const subColor = 'black';
+    // const subColor = '#76624F';
     const coffeColor = theme === 'darkTheme' ? darkTheme.text : '#39A800';
     // const coffeColor = theme === 'darkTheme' ? darkTheme.text : '#39A800';
 

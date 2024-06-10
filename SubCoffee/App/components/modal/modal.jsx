@@ -53,13 +53,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: 10,
   },
   container: {
     width: '90%',
     backgroundColor: 'white',
     borderRadius: 10,
-    padding: 20,
+    padding:20,
+    paddingBottom:5,
     alignItems: 'center',
   },
 });

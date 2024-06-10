@@ -3,7 +3,7 @@ import { View, Image, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import Ionicons from "react-native-vector-icons/Ionicons";
-import Entypo from 'react-native-vector-icons/Entypo'; // Importamos Entypo
+import Entypo from 'react-native-vector-icons/Entypo'; 
 import SubastaScreen from '../Screen/SubastaScreen';
 import OfertaScreen from '../Screen/OfertaScreen';
 import TabNavigationCom from './TabsNavigationCom';
@@ -31,7 +31,7 @@ const CustomDrawerContent = (props) => (
     <TouchableOpacity
       style={styles.logoutButton}
       onPress={() => {
-        // Aquí puedes añadir la lógica para cerrar sesión
+        
         console.log('Cerrar sesión clickeado');
       }}
     >
@@ -73,7 +73,7 @@ const CompradorDrawer = () => (
     drawerContent={(props) => <CustomDrawerContent {...props} />}
     screenOptions={({ route }) => ({
       ...DrawerNavigatorOptions(route),
-      headerShown: false, // Ocultar el encabezado superior
+      headerShown: false, 
       drawerIcon: ({ focused, color, size }) => {
         let iconName;
         if (route.name === 'Subastas') {

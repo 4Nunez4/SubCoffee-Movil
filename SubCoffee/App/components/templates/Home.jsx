@@ -2,51 +2,71 @@ import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import axios from "axios";
 import SearchBar from "../atoms/search/setSearchTerm";
+import { IP } from "../../Api/context/ip";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ip = "192.168.11.238"; 
+const ip = IP; 
 
 function Home({ navigation }) {
-  const [isLoading, setLoadig] = useState(true);
- /*  const [movies, setMovies] = useState([]); */
-  const [filteredMovies, setFilteredMovies] = useState([]);
-  const [data, setData] = useState([])
+  const [isLoading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+
   const [searchTerm, setSearchTerm] = useState('');
-  /* const [searchTerm, setSearchTerm] = useState(''); */
 
-  
-   /* const URL = 'https://reactnative.dev/movies.json'; */
-  // const URL = 'http://10.0.2.2:4000/v1/users';
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (token) {
+        
+          await getSubastaAxios(token);
+        } else {
+         
+          navigation.navigate('LoginScreen');
+        }
+      } catch (error) {
+        console.log('Error al verificar la sesión:', error);
 
-  const URL = 'http://10.193.156.73:4000/subasta/listar'
+      }
+    };
 
+    checkSession();
+  }, []);
+
+
+
+  const URL = `http://${ip}:4000/subasta/listar`;
 
   const getSubastaAxios = async () => {
     try {
-      await axios.get(URL).then((response) => {
-          console.log(response.data)
-          setData(response.data)
-      })
+      const token = await AsyncStorage.getItem('token');
+
+      const response = await axios.get(URL,{
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setData(response.data);
 
     } catch (error) {
-      console.log('error servidor'+ error)
+      console.log('Error en el servidor: ', error);
     } finally {
-      setLoadig(false)
+      setLoading(false);
     }
-}
-  useEffect(() => {
-    getSubastaAxios()
-  }, [])
-
-
-  // Función para filtrar las películas basadas en el término de búsqueda
-  const handleSearch = (text) => {
-    setSearchTerm(text);
-    const filtered = movies.filter(movie =>
-      movie.title.toLowerCase().includes(text.toLowerCase())
-    );
-    setFilteredMovies(filtered);
   };
 
+  useEffect(() => {
+    getSubastaAxios();
+  }, []);
+
+  const handleSearch = (text) => {
+    setSearchTerm(text);
+    const filtered = data.filter(item =>
+      item.descripcion_sub.toLowerCase().includes(text.toLowerCase())
+    );
+    setData(filtered);
+  };
+  
   return (
     <View style={styles.container}>
       
@@ -57,7 +77,7 @@ function Home({ navigation }) {
                 ) : (
                   <FlatList 
                   data={data}
-                  keyExtractor={({id}) => id}
+                  keyExtractor={(item) => item.pk_id_sub.toString()}
 
                /*    keyExtractor={(item) => toString(item.pk_id_sub) } */
 
@@ -80,7 +100,7 @@ function Home({ navigation }) {
 
                     <Text style={styles.Text}>
                       <Image 
-                        source={{ uri:`http://10.193.156.73:4000/img/subasta/${item.imagen_sub}` }}
+                        source={{ uri:`http://${ip}:4000/img/subasta/${item.imagen_sub}` }}
                         style={{ width: 100, height: 100 }}
                       />
                     </Text>
@@ -126,7 +146,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontStyle: 'normal',
     marginHorizontal: 20,
-    padding:10,
+    padding: 10,
     color: '#000',
   },
   Text1: {
@@ -134,23 +154,6 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     padding: 5,
     color: '#000',
-  },
-  itemContainer: {
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    marginBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 14,
-    color: '#666',
-  },
-  releaseYear: {
-    fontSize: 14,
-    color: '#666',
   },
 });
 

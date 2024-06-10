@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, ImageBackground, Alert, Text, Image } from "react-native";
+import { View, StyleSheet, Alert, Text, Image } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import LinkBoton from "../../components/atoms/button/linkboton";
 import checkConnectivity from "../../components/error/errorHandler";
-import firstPage from '../../resources/FirstPge1.jpg';
 import TitleFirst from "../../components/atoms/Typography/TextFirstPage";
 import { Typography } from "../../components/atoms/Typography/textGlobal";
 import LoginScreen from "../LoginScreen";
-
+import LinearGradient from "react-native-linear-gradient";
 
 export default function FirstPage() {
   const navigation = useNavigation();
@@ -32,17 +31,19 @@ export default function FirstPage() {
   );
 
   return (
-    <View style={styles.Image}>
-      <View style={styles.container}>
-        <Image source={require('../../resources/IconoSubCoffee.png')} style={styles.logo}/>
+    <View style={styles.container}>
+      <View style={styles.waveTop} />
+      <View style={styles.waveBottom} />
+      <View style={styles.content}>
+        <Image source={require('../../resources/IconoSubCoffee.png')} style={styles.logo} />
         <TitleFirst />
         <Text style={[Typography.subtitle, styles.customSubtitle]}>
           Únete a nosotros en nuestras subastas de café especial y descubre una experiencia única.
         </Text>
-      </View>
-      <View style={styles.footer}>
-        <LinkBoton press={() => setLoginVisible(true)} text={"Continuar"} />
-        <LoginScreen visible={loginVisible} onClose={() => setLoginVisible(false)} />
+        <View style={styles.footer}>
+          <LinkBoton press={() => setLoginVisible(true)} text={"Continuar"} />
+          <LoginScreen visible={loginVisible} onClose={() => setLoginVisible(false)} />
+        </View>
       </View>
     </View>
   );
@@ -51,17 +52,26 @@ export default function FirstPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#39A800',
+    position: 'relative',
+  },
+  waveTop: {
+    position: 'absolute',
+    top: 30,
+    left: 0,
+    bottom:0,
+    right: 0, 
+    height: 750, 
+    backgroundColor: 'white',
+    borderTopLeftRadius: 200, 
+    borderBottomRightRadius:200,
+   
+  },
+  content: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'relative',
     paddingTop: 300,
-
-  },
-  Image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-    backgroundColor:'white'
   },
   customSubtitle: {
     color: 'black',
@@ -70,16 +80,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   footer: {
-    position: 'absolute', // Coloca el View en la parte inferior
-    bottom: 0,            // Alinea al fondo
-    width: '100%',        // Cubre el ancho completo
-    alignItems: 'center', // Centra el contenido horizontalmente
-    paddingBottom: 20,    // Espacio desde el borde inferior
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    alignItems: 'center',
+    paddingBottom: 140,
   },
-  logo:{
-   
-    width:170,
-    height:170,
-    marginBottom:5
-  }
+  logo: {
+    width: 170,
+    height: 170,
+    marginBottom: 5,
+  },
 });
+

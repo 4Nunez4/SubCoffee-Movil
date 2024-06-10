@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#ccc',
-    marginTop: 10,
+    marginTop: 15,
     backgroundColor: '#39A800',
     borderRadius: 10,
     paddingHorizontal: 10, // Adjusted padding for better spacing

@@ -12,7 +12,7 @@ export const Typography = StyleSheet.create({
         fontWeight:'bold',
     },
     subtitle:{
-        fontSize:18,
+        fontSize:20,
         fontWeight:'bold',
         
     },
