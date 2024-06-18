@@ -15,10 +15,10 @@ import routerFinca from "./src/routes/finca.routes.js"
 import routerVariedad from "./src/routes/variedad.routes.js"
 import routertipovari from "./src/routes/tipovariedad.routes.js"
 import ofertasRoutes from "./src/routes/ofertas.routes.js";
+import { PORT } from "./src/config.js";
 
 const app = express();
 app.use(cors());
-const PORT = 4000
 
 app.use(express.json());
 app.use(bodyParser.json());

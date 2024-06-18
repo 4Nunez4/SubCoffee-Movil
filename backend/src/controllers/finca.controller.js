@@ -72,7 +72,7 @@ export const createFinca = async (req, res) => {
       res.status(404).json({ message: "No se pudo crear la finca" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Error en el servidor" + error });
+    res.status(500).json({ message: "Error en el servidor holaaa" + error });
   }
 };
 

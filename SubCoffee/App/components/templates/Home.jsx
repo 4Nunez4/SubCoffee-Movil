@@ -4,15 +4,20 @@ import axios from "axios";
 import SearchBar from "../atoms/search/setSearchTerm";
 import { IP } from "../../Api/context/ip";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomModal from "../modal/modal";
 
 const ip = IP; 
 
 function Home({ navigation }) {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-
+  const [showModal, setShowModal] = useState(false)
+  const [selectSubasta, setSelectSubasta] = useState(null)
   const [searchTerm, setSearchTerm] = useState('');
 
+
+  
+//Aseguracion del login
   useEffect(() => {
     const checkSession = async () => {
       try {
@@ -66,6 +71,15 @@ function Home({ navigation }) {
     );
     setData(filtered);
   };
+
+  //modal que aparece al seleccionar una subasta
+  const handleSubastaPress = (subasta) => {
+    setSelectSubasta(subasta);
+    setShowModal(true)
+  }
+  const handleModalClose = () => {
+    setShowModal(false);
+  };
   
   return (
     <View style={styles.container}>
@@ -82,6 +96,7 @@ function Home({ navigation }) {
                /*    keyExtractor={(item) => toString(item.pk_id_sub) } */
 
                   renderItem={({item}) => (
+                    <TouchableOpacity onPress={() => handleSubastaPress(item)}>
                     
                     <View > 
 
@@ -128,9 +143,39 @@ function Home({ navigation }) {
                     </TouchableOpacity> */}
 
                     </View>
+                    </TouchableOpacity>
+                    
                   )}
                   />
+                  
                 )}
+
+      <CustomModal
+        visible={showModal}
+        onClose={handleModalClose}
+        title="Detalles de la subasta"
+      >
+        <View>
+          <Text style={styles.Text}>
+            VARIEDAD: {selectSubasta?.fk_variedad}
+          </Text>
+          <Image
+            source={{ uri: `http://${ip}:4000/img/subasta/${selectSubasta?.imagen_sub}` }}
+            style={{ width: 100, height: 100 }}
+          />
+          <Text style={styles.Text}>VENDEDOR: {selectSubasta?.nombre_user}</Text>
+          <Text style={styles.Text}>
+            FECHA INICIO: {new Date(selectSubasta?.fecha_inicio_sub).toLocaleDateString()}
+          </Text>
+          <Text style={styles.Text}>
+            FECHA FIN: {new Date(selectSubasta?.fecha_fin_sub).toLocaleDateString()}
+          </Text>
+          <Text style={styles.Text}>
+            DESCRIPCION: {selectSubasta?.descripcion_sub}
+          </Text>
+          
+        </View>
+      </CustomModal>
     </View>
   );
 }

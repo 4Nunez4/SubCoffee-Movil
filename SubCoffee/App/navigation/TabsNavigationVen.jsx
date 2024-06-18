@@ -12,22 +12,50 @@ const Tab = createBottomTabNavigator();
 const TabNavigationVen = () => {
   return (
     <Tab.Navigator
-      screenOptions={{
-        tabBarShowLabel: false,
-        tabBarActiveTintColor: "#39A800",
-        tabBarInactiveTintColor: "grey",
-      }}
-    >
-      <Tab.Screen
+    screenOptions={({ route }) => ({
+      tabBarShowLabel: false,
+      tabBarActiveTintColor: '#39A800',
+      tabBarInactiveTintColor: 'grey',
+      tabBarActiveBackgroundColor: 'rgba(57, 168, 0, 0.1)',
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconName;
+        if (route.name === 'Bienvenido Kata') {
+          iconName = 'house';
+          return <FontAwesome6 name={iconName} size={size} color={color} />;
+        } else if (route.name === 'Perfil') {
+          iconName = 'person-circle-sharp';
+          return <Ionicons name={iconName} size={size} color={color} />;
+        }
+      },
+    })}
+  >
+       <Tab.Screen
         name={`Bienvenido Kata`}
         component={Home}
+        // options={{
+        //   tabBarIcon: ({ color, size }) => (
+        //     <FontAwesome6 name="house" size={size} color={color} />
+        //   ), 
+        // }}
+      />
+       
+      
+      <Tab.Screen
+        name="Perfil"
+        component={PerfilScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <FontAwesome6 name="house" size={size} color={color} />
+            <Ionicons name='person-circle-sharp' size={34} color={color} />
           ),
         }}
       />
-      <Tab.Screen
+       
+    </Tab.Navigator>
+  );
+};
+
+export default TabNavigationVen;
+ {/* <Tab.Screen
         name="Subastar"
         component={SubastaScreen}
         options={{
@@ -36,17 +64,4 @@ const TabNavigationVen = () => {
             <FontAwesome name="plus" size={36} color={color} />
           ),
         }}
-      />
-      <Tab.Screen
-        name="Perfil"
-        component={PerfilScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-circle-sharp" size={34} color={color} />
-          ),
-        }}
-      />
-    </Tab.Navigator>
-  );
-};
-export default TabNavigationVen;
+      /> */}

@@ -6,7 +6,7 @@ import { validationRegisterUser, validationUpdateUser } from "../validations/use
 const routerUser = Router();
 
 routerUser.get("/users", getUsers);
-routerUser.get("/users/:id", getUser);
+routerUser.get("/users/:id", verificarUserToken, getUser);
 routerUser.post("/users", verificarUserToken, cargarImagen, validationRegisterUser, createUser);
 routerUser.put("/users/:id", verificarUserToken, cargarImagen, updateUser);
 routerUser.delete("/users/:id", verificarUserToken, deleteUser);

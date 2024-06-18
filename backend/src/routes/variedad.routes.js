@@ -5,7 +5,7 @@ import { validationVariedad } from "../validations/variedad.validation.js";
 
 const routerVariedad = Router();
 
-routerVariedad.get("/variedad", verificarUserToken, getVariedades);
+routerVariedad.get("/listar", /* verificarUserToken, */ getVariedades);
 routerVariedad.get("/variedaduser/:id/:id_finca", verificarUserToken, getVariedadUser);
 routerVariedad.post( "/variedad", verificarUserToken, validationVariedad, createVariedad);
 routerVariedad.put( "/variedad/:id", verificarUserToken, validationVariedad, updateVariedad);
