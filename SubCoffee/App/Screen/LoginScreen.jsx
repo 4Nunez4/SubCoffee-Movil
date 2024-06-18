@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Alert, TouchableOpacity, Modal, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import LinkBoton from '../components/atoms/button/linkboton';
@@ -15,6 +15,7 @@ const ip = IP;
 
 const LoginScreen = ({ visible, onClose }) => {
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     correo: '',
     password: '',
@@ -93,17 +94,22 @@ const LoginScreen = ({ visible, onClose }) => {
   // };
   
   const Validacion = async () => {
+    setIsLoading(true);
+
     const connectionInfo = await NetInfo.fetch();
     if (!connectionInfo.isConnected) {
       Alert.alert('Sin conexión', 'Por favor, verifica tu conexión a internet');
+      setIsLoading(false);
       return;
     }
     if (!formData.correo || !formData.password) {
       Alert.alert('Campos vacíos', 'Por favor, complete todos los campos');
+      setIsLoading(false);
       return;
     }
     if (!formData.correo.includes('@')) {
       Alert.alert('Correo inválido', 'Por favor, ingrese un correo electrónico válido');
+      setIsLoading(false);
       return;
     }
   
@@ -129,6 +135,8 @@ const LoginScreen = ({ visible, onClose }) => {
           const usuario = JSON.parse(await AsyncStorage.getItem('usuarios'));
           const userRol = usuario.rol_user.toLowerCase();
           const userStatus = usuario.estado_user;
+          setIsLoading(false);
+
   
           if (userRol === 'vendedor' && userStatus === 'activo') {
             navigation.navigate("Comprador");
@@ -139,18 +147,23 @@ const LoginScreen = ({ visible, onClose }) => {
           } else {
             if ((userRol === 'vendedor' && userStatus === 'inactivo') || (userRol === 'comprador' && userStatus === 'inactivo')) {
               Alert.alert("Lo sentimos pero no está activo en el sistema.");
+              setIsLoading(false);
             } else {
               Alert.alert("Error", "Datos incorrectos");
+              setIsLoading(false);
             }
           }
         } else {
           throw new Error('Datos de respuesta inválidos');
+          setIsLoading(false);
         }
       } else {
         throw new Error('Usuario no registrado');
+        setIsLoading(false);
       }
     } catch (error) {
       console.error('Error al iniciar sesión:', error.message);
+      setIsLoading(false);
       if (error.response) {
       
         console.log(error.response.data);
@@ -166,8 +179,10 @@ const LoginScreen = ({ visible, onClose }) => {
   
       if (error.response && error.response.status === 400) {
         Alert.alert('Usuario no registrado');
+        setIsLoading(false);
       } else {
         Alert.alert('404','Usuario no registrado');
+        setIsLoading(false);
       }
   
       // await obtenerTodosUsuarios();
@@ -175,6 +190,7 @@ const LoginScreen = ({ visible, onClose }) => {
   };
   
   return (
+    <View style={{ flex: 1 }}>
     <CustomModal visible={visible} onClose={onClose}>
       <View style={styles.formulario}>
         <Text style={styles.titulo}>INICIAR SESIÓN</Text>
@@ -205,7 +221,20 @@ const LoginScreen = ({ visible, onClose }) => {
       </View>
       
     </CustomModal>
-  );
+    <Modal
+      transparent={true}
+      animationType="fade"
+      visible={isLoading}
+      onRequestClose={() => {}}
+    >
+      <View style={styles.modalBackground}>
+        <View style={styles.activityIndicatorWrapper}>
+          <ActivityIndicator size="large" color="#39A800" />
+        </View>
+      </View>
+    </Modal>
+  </View>
+);
 };
 
 const styles = StyleSheet.create({
@@ -257,6 +286,21 @@ const styles = StyleSheet.create({
     color: "#559EB4",
   
   },
+  modalBackground: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+  },
+  activityIndicatorWrapper: {
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    height: 100,
+    width: 100,
+    borderRadius: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
  
 });
 

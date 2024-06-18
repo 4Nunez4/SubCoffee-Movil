@@ -1,20 +1,21 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import React from 'react'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React from 'react';
 
 const Boton = (props) => {
   return (
-    <View>
+    <View style={styles.contenedor}>
       <TouchableOpacity 
         style={styles.boton}
         onPress={props.press}
       >
-        <Text style={styles.texto}>Enviar</Text>
+        <Text style={styles.texto}>{props.title}</Text>
       </TouchableOpacity>
     </View>
-  )
+  );
 }
 
-export default Boton
+export default Boton;
+
 const styles = StyleSheet.create({
   boton: {
     width: 160,
@@ -22,14 +23,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 10,
-    // marginLeft:'30%',
     backgroundColor: '#39A800',
-    borderRadius: 10, // Deja solo una de estas líneas
- },
+    borderRadius: 10,
+  },
   texto: {
     color: 'white',
     fontSize: 20,
     fontWeight: '500',
-
+  },
+  contenedor: {
+    justifyContent:'center',
+    alignItems:'center'
   }
-})
+});

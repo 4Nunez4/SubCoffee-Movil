@@ -10,6 +10,8 @@ import TabNavigationCom from "./App/navigation/TabsNavigationCom.jsx";
 import TabNavigationVen from "./App/navigation/TabsNavigationVen.jsx";
 import SideBar from "./App/navigation/sidebar.jsx";
 import ForgotPassword from "./App/Screen/Recuperar-Password.jsx";
+import OfertaScreen from "./App/Screen/OfertaScreen.jsx";
+import Notificaciones from "./App/components/templates/notificaciones.jsx";
 
 const Stack = createNativeStackNavigator();
 
@@ -78,6 +80,33 @@ const App = () => {
               }}
 
               /> 
+              <Stack.Screen
+              name="Ofertar"
+              component={OfertaScreen}
+              options={{
+                title:'Ofertar',
+                headerStyle: {
+                  backgroundColor: '#39A800', 
+
+                },
+                  headerTintColor: 'white', 
+              }}
+
+              /> 
+              
+              <Stack.Screen
+              name="Notificaciones"
+              component={Notificaciones}
+              options={{
+                title:'Notificaciones',
+                headerStyle: {
+                  backgroundColor: '#39A800', 
+
+                },
+                  headerTintColor: 'white', 
+              }}
+
+              /> 
               
           
              <Stack.Screen
@@ -87,6 +116,7 @@ const App = () => {
                 headerBackTitleVisible: false,
               }}
             >
+              
               {({ route }) => <SideBar userType={route.params.userType} />}
             </Stack.Screen>
               

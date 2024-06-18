@@ -39,7 +39,7 @@ const Input = ({ searchTerm, setSearchTerm }) => {
         />
         {isFocused && (
           <TouchableOpacity style={styles.button} onPress={() => {}}>
-            <Text style={styles.buttonText}>Go</Text>
+            <Text style={styles.buttonText}>Ir</Text>
           </TouchableOpacity>
         )}
       </Animated.View>
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 14,
   },
   buttonText: {
-    color: '#2f2f2f',
+    color: 'white',
     fontWeight: 'bold',
     fontSize: 18,
   },

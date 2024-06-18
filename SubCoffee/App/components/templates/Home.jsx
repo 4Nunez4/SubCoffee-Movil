@@ -5,6 +5,8 @@ import SearchBar from "../atoms/search/setSearchTerm";
 import { IP } from "../../Api/context/ip";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomModal from "../modal/modal";
+import LinkBoton from "../atoms/button/linkboton";
+import Boton from "../atoms/button/Boton";
 
 const ip = IP; 
 
@@ -27,7 +29,7 @@ function Home({ navigation }) {
           await getSubastaAxios(token);
         } else {
          
-          navigation.navigate('LoginScreen');
+          navigation.navigate('FirstPage');
         }
       } catch (error) {
         console.log('Error al verificar la sesión:', error);
@@ -40,7 +42,7 @@ function Home({ navigation }) {
 
 
 
-  const URL = `${ip}/v1/listar`;
+  const URL = `${ip}/v1/subasta`;
 
   const getSubastaAxios = async () => {
     try {
@@ -80,6 +82,9 @@ function Home({ navigation }) {
   const handleModalClose = () => {
     setShowModal(false);
   };
+  const handlePressSubasta = () => {
+    navigation.navigate('Ofertar')
+  }
   
   return (
     <View style={styles.container}>
@@ -103,11 +108,11 @@ function Home({ navigation }) {
                     <Text style={styles.Text1}>Subasta</Text>
 
                       
-                    {data.map((item) => (
+                    {/* {data.map((item) => (
                       <View key={item.pk_cedula_user}>
                        <Text>Hola: {item.pk_cedula_user} </Text> 
                       </View>
-                    ))}
+                    ))} */}
                     
                     <Text>
                       VENDEDOR: {item.nombre_user}
@@ -115,7 +120,7 @@ function Home({ navigation }) {
 
                     <Text style={styles.Text}>
                       <Image 
-                        source={{ uri:`http://${ip}:4000/img/subasta/${item.imagen_sub}` }}
+                        source={{ uri:`${ip}/img/subasta/${item.imagen_sub}` }}
                         style={{ width: 100, height: 100 }}
                       />
                     </Text>
@@ -173,7 +178,7 @@ function Home({ navigation }) {
           <Text style={styles.Text}>
             DESCRIPCION: {selectSubasta?.descripcion_sub}
           </Text>
-          
+          <Boton press={handlePressSubasta} title="Ofertar" />
         </View>
       </CustomModal>
     </View>
