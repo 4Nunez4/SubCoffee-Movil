@@ -40,7 +40,7 @@ function Home({ navigation }) {
 
 
 
-  const URL = `http://${ip}:4000/subasta/listar`;
+  const URL = `${ip}/v1/listar`;
 
   const getSubastaAxios = async () => {
     try {

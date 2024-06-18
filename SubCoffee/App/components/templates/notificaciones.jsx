@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Modal } from 'react-native';
 import axios from 'axios';
 import { Ionicons } from 'react-native-vector-icons';
+import { IP } from '../../Api/context/ip';
 
-const ip = "192.168.11.238"; 
+const ip = IP; 
 
 const Notificaciones = ({ isVisible, onClose }) => {
   const [notificaciones, setNotificaciones] = useState([]);
