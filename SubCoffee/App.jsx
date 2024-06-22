@@ -12,6 +12,7 @@ import SideBar from "./App/navigation/sidebar.jsx";
 import ForgotPassword from "./App/Screen/Recuperar-Password.jsx";
 import OfertaScreen from "./App/Screen/OfertaScreen.jsx";
 import Notificaciones from "./App/components/templates/notificaciones.jsx";
+// import modalSide from "./App/navigation/modalsidebar.jsx";
 
 const Stack = createNativeStackNavigator();
 
@@ -107,6 +108,19 @@ const App = () => {
               }}
 
               /> 
+              {/* <Stack.Screen
+              name="ModalSide"
+              component={modalSide}
+              options={{
+                title:'Sub',
+                headerStyle: {
+                  backgroundColor: '#39A800', 
+
+                },
+                  headerTintColor: 'white', 
+              }}
+
+              />  */}
               
           
              <Stack.Screen

@@ -5,10 +5,15 @@ import PerfilScreen from "../components/templates/perfil";
 import Home from "../components/templates/Home";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import iconNotifi from '../resources/notificacionesIcono.png'
+import { Image , TouchableOpacity} from "react-native";
+import iconSub from '../resources/IconoSubCoffee.png'
+import { useNavigation } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 
 const TabNavigationVen = () => {
+  const navigation = useNavigation(); 
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -31,18 +36,37 @@ const TabNavigationVen = () => {
         },
       })}
     >
-     <Tab.Screen
+      <Tab.Screen
         name="SubCoffee"
         component={Home}
         options={{
           tabBarLabel: 'SubCoffee', 
           tabBarLabelStyle: { color: '#FFF' }, 
-          headerTitle: 'SubCoffee', 
+          headerTitle: () => (
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              
+              <Image
+                source={iconSub}
+                style={{ width: 40, height: 40,  marginLeft: 6 }}
+              />
+              <Text style={{ color:'#FFF',fontSize: 26, fontWeight: 'bold', marginLeft: 8 }}>
+                SubCoffee
+              </Text>
+            </View>
+          ),
           headerStyle: { backgroundColor: '#4FBA18' },
           headerTitleStyle: { color: '#FFF' , fontSize:25, fontWeight:'bold'}, 
+          headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
+              <Image
+              source={iconNotifi} 
+              style={{ width: 26, height: 26, marginRight: 26 , tintColor:'white'}} 
+            />
+            </TouchableOpacity>
+            
+          ),
         }}
       />
-      
       <Tab.Screen
         name="Perfil"
         component={PerfilScreen}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Modal, Animated, TouchableWithoutFeedback, StyleSheet } from 'react-native';
 
-const CustomModal = ({ visible, onClose, children }) => {
+const modalSide = ({ visible, onClose, children }) => {
   const [scaleValue] = useState(new Animated.Value(0));
 
   useEffect(() => {
@@ -57,4 +57,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomModal;
+export default modalSide;

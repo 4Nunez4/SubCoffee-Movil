@@ -3,7 +3,7 @@ import { TextInput, StyleSheet, View, TouchableOpacity, Text, Animated } from "r
 
 const Input = ({ searchTerm, setSearchTerm }) => {
   const [isFocused, setIsFocused] = useState(false);
-  const widthAnim = useState(new Animated.Value(250))[0];  // Estado inicial del ancho
+  const widthAnim = useState(new Animated.Value(250))[0];  
 
   const handleFocus = () => {
     setIsFocused(true);

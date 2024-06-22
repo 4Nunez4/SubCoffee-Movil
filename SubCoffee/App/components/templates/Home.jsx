@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { ActivityIndicator, FlatList, View, Text, StyleSheet, TouchableOpacity, Image , ScrollView} from "react-native";
 import axios from "axios";
 import SearchBar from "../atoms/search/setSearchTerm";
 import { IP } from "../../Api/context/ip";
@@ -10,6 +10,7 @@ import Boton from "../atoms/button/Boton";
 
 const ip = IP; 
 
+
 function Home({ navigation }) {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
@@ -19,26 +20,26 @@ function Home({ navigation }) {
 
 
   
-//Aseguracion del login
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const token = await AsyncStorage.getItem('token');
-        if (token) {
+// //Aseguracion del login
+//   useEffect(() => {
+//     const checkSession = async () => {
+//       try {
+//         const token = await AsyncStorage.getItem('token');
+//         if (token) {
         
-          await getSubastaAxios(token);
-        } else {
+//           await getSubastaAxios(token);
+//         } else {
          
-          navigation.navigate('FirstPage');
-        }
-      } catch (error) {
-        console.log('Error al verificar la sesión:', error);
+//           navigation.navigate('FirstPage');
+//         }
+//       } catch (error) {
+//         console.log('Error al verificar la sesión:', error);
 
-      }
-    };
+//       }
+//     };
 
-    checkSession();
-  }, []);
+//     checkSession();
+//   }, []);
 
 
 
@@ -69,7 +70,7 @@ function Home({ navigation }) {
   const handleSearch = (text) => {
     setSearchTerm(text);
     const filtered = data.filter(item =>
-      item.descripcion_sub.toLowerCase().includes(text.toLowerCase())
+      item.descripcion_sub.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setData(filtered);
   };
@@ -88,24 +89,26 @@ function Home({ navigation }) {
   
   return (
     <View style={styles.container}>
-      
-      <SearchBar searchTerm={searchTerm} setSearchTerm={handleSearch} />
+    {/* <ScrollView> */}
+      <View style={styles.searchContainer}>
+        <SearchBar searchTerm={searchTerm} setSearchTerm={handleSearch} value={searchTerm} />
+      </View>
+
       
       {isLoading ? (
-                  <ActivityIndicator/>
-                ) : (
-                  <FlatList 
-                  data={data}
-                  keyExtractor={(item) => item.pk_id_sub.toString()}
+          <ActivityIndicator style={{ marginTop: 20 }} />
+        ) : (
+          <FlatList
+            data={data}
+            keyExtractor={(item) => item.pk_id_sub.toString()}
 
                /*    keyExtractor={(item) => toString(item.pk_id_sub) } */
 
                   renderItem={({item}) => (
                     <TouchableOpacity onPress={() => handleSubastaPress(item)}>
-                    
-                    <View > 
+                    <View style={styles.etiqueta}>
 
-                    <Text style={styles.Text1}>Subasta</Text>
+                    {/* <Text style={styles.Text1}>Subasta</Text> */}
 
                       
                     {/* {data.map((item) => (
@@ -114,14 +117,14 @@ function Home({ navigation }) {
                       </View>
                     ))} */}
                     
-                    <Text>
-                      VENDEDOR: {item.nombre_user}
-                    </Text> 
+                    <Text style={styles.Text}>
+                      VARIEDAD: {item.nombre_tipo_vari}
+                    </Text>
 
                     <Text style={styles.Text}>
                       <Image 
                         source={{ uri:`${ip}/img/subasta/${item.imagen_sub}` }}
-                        style={{ width: 100, height: 100 }}
+                        style={{ width: 150, height: 150 }}
                       />
                     </Text>
 
@@ -137,9 +140,11 @@ function Home({ navigation }) {
                       DESCRIPCION:{item.descripcion_sub}
                     </Text>
 
-                    <Text style={styles.Text}>
-                      VARIEDAD: {item. fk_variedad}
-                    </Text>
+                   
+                    <Text  style={styles.Text}>
+                      VENDEDOR: {item.nombre_user}
+                    </Text> 
+
 
 
 
@@ -149,12 +154,12 @@ function Home({ navigation }) {
 
                     </View>
                     </TouchableOpacity>
-                    
-                  )}
-                  />
-                  
-                )}
-
+            )}
+          />
+        )}
+      {/* </ScrollView> */}
+      
+      
       <CustomModal
         visible={showModal}
         onClose={handleModalClose}
@@ -162,11 +167,11 @@ function Home({ navigation }) {
       >
         <View>
           <Text style={styles.Text}>
-            VARIEDAD: {selectSubasta?.fk_variedad}
+            VARIEDAD: {selectSubasta?.nombre_tipo_vari}
           </Text>
           <Image
-            source={{ uri: `http://${ip}:4000/img/subasta/${selectSubasta?.imagen_sub}` }}
-            style={{ width: 100, height: 100 }}
+            source={{ uri: `${ip}/img/subasta/${selectSubasta?.imagen_sub}` }}
+            style={{ width: 250, height: 150 }}
           />
           <Text style={styles.Text}>VENDEDOR: {selectSubasta?.nombre_user}</Text>
           <Text style={styles.Text}>
@@ -193,10 +198,10 @@ const styles = StyleSheet.create({
     paddingTop: 22,
   },
   Text: {
-    fontSize: 15,
+    fontSize: 14,
     fontStyle: 'normal',
-    marginHorizontal: 20,
-    padding: 10,
+    marginHorizontal: 10,
+    padding: 5,
     color: '#000',
   },
   Text1: {
@@ -205,6 +210,20 @@ const styles = StyleSheet.create({
     padding: 5,
     color: '#000',
   },
+  etiqueta:{
+    padding: 5,
+    borderRadius: 10,
+    marginHorizontal: 10,
+    marginBottom: 20,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 8,
+    // borderWidth:1,
+    // borderColor:'gray'
+  }
 });
 
 export default Home;

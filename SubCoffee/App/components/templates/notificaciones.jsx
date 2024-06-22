@@ -1,72 +1,69 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Alert, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { IP } from '../../Api/context/ip';
 
 const ip = IP;
 
-const Notificaciones = ({ isVisible, onClose }) => {
-  const [notificaciones, setNotificaciones] = useState([]);
-  const [token, setToken] = useState(null);
+const Notificaciones = () => {
+  const [notifications, setNotifications] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const obtenerToken = async () => {
+    const fetchNotifications = async () => {
       try {
-        const storedToken = await AsyncStorage.getItem('token');
-        if (storedToken) {
-          setToken(storedToken);
+        const url = `${ip}/v1/notificaciones`;
+
+        //aqui obtengo el token de asyncstorage y lo verifico a ver si es valido 
+        const token = await AsyncStorage.getItem('token');
+        if (!token) {
+          Alert.alert('Error', 'No se encontró el token de autenticación');
+          setIsLoading(false);
+          return;
         } else {
-          Alert.alert('Sesión expirada', 'Por favor, inicia sesión nuevamente.');
-          onClose(); // Cierra el modal si no hay token
+          console.log('Token encontrado:', token);
+        }
+
+        const response = await axios.get(url, { headers: { token: token } });
+
+        if (response.status === 200) {
+    
+          setNotifications(response.data.data); 
+        } else {
+          Alert.alert('Error', 'Error al obtener las notificaciones');
         }
       } catch (error) {
-        console.error('Error al obtener el token:', error);
+        console.error('Error:', error);
+        Alert.alert('Error', 'Hubo un error al obtener las notificaciones');
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    if (isVisible) {
-      obtenerToken();
-    }
-  }, [isVisible, onClose]);
+    fetchNotifications();
+  }, []);
 
-  useEffect(() => {
-    const cargarNotificaciones = async () => {
-      try {
-        if (token) {
-          const response = await axios.get(`${ip}/v1/notificaciones`, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-          setNotificaciones(response.data);
-        }
-      } catch (error) {
-        console.error('Error al cargar las notificaciones:', error);
-      }
-    };
-
-    if (token) {
-      cargarNotificaciones();
-    }
-  }, [token]);
-
-  if (!isVisible) {
-    return null; // Si isVisible es false, no renderiza nada
-  }
+  const renderNotification = ({ item }) => (
+    <View style={styles.notificationContainer}>
+      <Text style={styles.notificationTextTitle}>{item.nombre_user}</Text>
+      <Text style={styles.notificationText}>{item.texto_not}</Text>
+      <Text style={styles.notificationFecha}>{item.fecha_not}</Text>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={notificaciones}
-        keyExtractor={item => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.notificationItem}>
-            <Text style={styles.notificationText}>{item.titulo}</Text>
-          </View>
-        )}
-      />
-      <TouchableOpacity style={styles.buttonClose} onPress={onClose}>
-        <Text style={styles.textStyle}>Cerrar</Text>
-      </TouchableOpacity>
+     
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <FlatList
+          data={notifications}
+          renderItem={renderNotification}
+          keyExtractor={(item) => item.pk_id_not.toString()} 
+        />
+      )}
     </View>
   );
 };
@@ -74,31 +71,41 @@ const Notificaciones = ({ isVisible, onClose }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
-    paddingHorizontal: 20,
-    paddingTop: 20,
+    padding: 20,
+    backgroundColor: 'white',
   },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-    borderRadius: 20,
-    padding: 10,
-    alignSelf: 'center',
-    marginTop: 20,
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: 'black',
   },
-  textStyle: {
-    color: "black",
-    fontWeight: "bold",
-    textAlign: "center"
-  },
-  notificationItem: {
-    padding: 10,
-    marginVertical: 8,
-    backgroundColor: "#f9c2ff",
-    borderRadius: 8,
+  notificationContainer: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderColor: 'green',
   },
   notificationText: {
-    fontSize: 16,
+    fontSize: 18,
+    color: 'black',
   },
+  loadingText: {
+    fontSize: 18,
+    color: 'gray',
+    textAlign: 'center',
+  },
+  notificationTextTitle:{
+    fontSize: 18,
+    color: 'black',
+    marginBottom:10,
+    fontWeight:'700'
+  },
+  notificationFecha:{
+    fontSize: 12,
+    color: 'black',
+    marginBottom:3,
+    // fontWeight:'700'
+  }
 });
 
 export default Notificaciones;

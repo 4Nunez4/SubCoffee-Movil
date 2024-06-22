@@ -10,7 +10,7 @@ import LinearGradient from "react-native-linear-gradient";
 
 export default function FirstPage() {
   const navigation = useNavigation();
-  const [loginVisible, setLoginVisible] = useState(false);
+  const [loginVisible, setLoginVisible] = useState(null)
 
   useEffect(() => {
     const onConnected = () => console.log("conectado a internet");
@@ -30,6 +30,11 @@ export default function FirstPage() {
     }, [])
   );
 
+  const onSuccess = () => {
+    setLoginVisible(false); // Cerrar el modal de inicio de sesión
+    // Aquí podrías realizar acciones adicionales después del inicio de sesión
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.waveTop} />
@@ -41,9 +46,10 @@ export default function FirstPage() {
           Únete a nosotros en nuestras subastas de café especial y descubre una experiencia única.
         </Text>
         <View style={styles.footer}>
-          <LinkBoton press={() => setLoginVisible(true)} text={"Continuar"} />
-          <LoginScreen visible={loginVisible} onClose={() => setLoginVisible(false)} />
-        </View>
+         <LinkBoton press={() => setLoginVisible(true)} text={"Continuar"} />
+         {loginVisible && <LoginScreen visible={true} onClose={() =>  setLoginVisible(false)} onSuccess={onSuccess} />}
+      </View>
+
       </View>
     </View>
   );

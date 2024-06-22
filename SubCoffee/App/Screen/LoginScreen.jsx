@@ -7,54 +7,38 @@ import CustomModal from '../components/modal/modal';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { IP } from '../Api/context/ip';
-import jwtDecode from 'jwt-decode'
+import { jwtDecode } from 'jwt-decode';
 
 
 // const ip = "192.168.11.238";
 const ip = IP;
 
-const LoginScreen = ({ visible, onClose }) => {
+const LoginScreen = ({ visible, onClose, onSuccess }) => {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
+  const [loginSuccess, setLoginSuccess] = useState(false); 
   const [formData, setFormData] = useState({
     correo: '',
     password: '',
   });
+  // const verificarToken = async (token) => {
+  //   if (!token) return false;
+  //   try {
+  //     const decodedToken = jwtDecode(token);
+  //     const expirationTime = decodedToken.exp;
+  //     const currentTime = Date.now() / 1000;
+  //     return expirationTime >= currentTime;
+  //   } catch (error) {
+  //     console.error('Error al decodificar el token:', error.message);
+  //     return false;
+  //   }
+  // };
 
-  const verificarToken = async (token) => {
-    if (!token) return false;
-
-    const decodedToken = jwtDecode(token);
-    const expirationTime = decodedToken.exp;
-    const currentTime = Date.now() / 1000;
-
-    if (expirationTime < currentTime) {
-      return false;
-    }
-
-    return true;
+  const handleInputChange = (name, value) => {
+    setFormData({ ...formData, [name]: value });
   };
-  useEffect(() => {
-    const verificarTokenStorage = async () => {
-      const token = await AsyncStorage.getItem('token');
-      const esTokenValido = await verificarToken(token);
 
-      if (!esTokenValido) {
-        setFormData({ correo: '', password: '' });
-        // Mostrar modal de inicio de sesión aquí
-      } else {
-        navigation.navigate("Comprador");
-      }
-    };
 
-    verificarTokenStorage();
-  }, []);
-  
-  useEffect(() => {
-    if (!visible) {
-      setFormData({ correo: '', password: '' });
-    }
-  }, [visible]);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -69,29 +53,8 @@ const LoginScreen = ({ visible, onClose }) => {
     };
   }, []);
 
-  const handleInputChange = (name, value) => {
-    setFormData({ ...formData, [name]: value });
-  };
-  // const obtenerTodosUsuarios = async () => {
-  //   try {
-  //     const response = await axios.get(`http://${ip}:4000/v1/users`);
-  //     console.log('Todos los usuarios:', response.data);
-  //   } catch (error) {
-  //     console.error('Error al obtener todos los usuarios:', error.message);
-  //     if (error.response) {
-      
-  //       console.log(error.response.data);
-  //       console.log(error.response.status);
-  //       console.log(error.response.headers);
-  //     } else if (error.request) {
-      
-  //       console.log(error.request);
-  //     } else {
-  //       console.log('Error', error.message);
-  //     }
-  //     console.log(error.config);
-  //   }
-  // };
+
+
   
   const Validacion = async () => {
     setIsLoading(true);
@@ -127,7 +90,8 @@ const LoginScreen = ({ visible, onClose }) => {
           console.log('Token obtenido al iniciar sesión:', token);
 
           await AsyncStorage.setItem('usuarios', JSON.stringify(user));
-
+          setLoginSuccess(true);
+          setIsLoading(false); 
           console.log(token);
   
           // await obtenerTodosUsuarios();
@@ -155,11 +119,10 @@ const LoginScreen = ({ visible, onClose }) => {
           }
         } else {
           throw new Error('Datos de respuesta inválidos');
-          setIsLoading(false);
+          
         }
       } else {
         throw new Error('Usuario no registrado');
-        setIsLoading(false);
       }
     } catch (error) {
       console.error('Error al iniciar sesión:', error.message);
@@ -188,7 +151,9 @@ const LoginScreen = ({ visible, onClose }) => {
       // await obtenerTodosUsuarios();
     }
   };
-  
+  if (!loginSuccess) {
+    
+  }
   return (
     <View style={{ flex: 1 }}>
     <CustomModal visible={visible} onClose={onClose}>
@@ -244,6 +209,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.0)',
     paddingTop: '5%',
+    paddingBottom:'5%'
   },
   titulo: {
     fontSize: 24,
